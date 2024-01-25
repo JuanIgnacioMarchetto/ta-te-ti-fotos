@@ -28,7 +28,7 @@ const Game = () => {
     const reader = new FileReader();
 
     reader.onloadend = () => {
-      const imageUrl = reader.result;
+      const imageUrl = URL.createObjectURL(file);
       player === 'X' ? setPlayerX(imageUrl) : setPlayerO(imageUrl);
     };
 
