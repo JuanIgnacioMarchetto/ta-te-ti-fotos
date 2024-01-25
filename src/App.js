@@ -3,7 +3,7 @@ import './App.css';
 
 const Square = ({ value, onClick }) => (
   <button className="square" onClick={onClick}>
-    {value && <img src={value} alt="player" />}
+    {value}
   </button>
 );
 
@@ -19,22 +19,13 @@ const Board = ({ squares, onClick }) => {
 
 const Game = () => {
   const [squares, setSquares] = useState(Array(9).fill(null));
-  const [playerX, setPlayerX] = useState(null);
-  const [playerO, setPlayerO] = useState(null);
+  const [playerX, setPlayerX] = useState('Player X');
+  const [playerO, setPlayerO] = useState('Player O');
   const [xIsNext, setXIsNext] = useState(true);
 
-  const handleImageChange = (player, event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      const imageUrl = URL.createObjectURL(file);
-      player === 'X' ? setPlayerX(imageUrl) : setPlayerO(imageUrl);
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
+  const handleNameChange = (player, event) => {
+    const name = event.target.value;
+    player === 'X' ? setPlayerX(name) : setPlayerO(name);
   };
 
   const handleClick = (index) => {
@@ -43,7 +34,7 @@ const Game = () => {
     }
 
     const newSquares = squares.slice();
-    newSquares[index] = xIsNext ? 'X' : 'O';
+    newSquares[index] = xIsNext ? playerX : playerO;
     setSquares(newSquares);
     setXIsNext(!xIsNext);
   };
@@ -53,18 +44,26 @@ const Game = () => {
     ? `Winner: ${winner}`
     : squares.every((square) => square !== null)
     ? 'Draw!'
-    : `Next player: ${xIsNext ? 'X' : 'O'}`;
+    : `Next player: ${xIsNext ? playerX : playerO}`;
 
   return (
     <div className="game">
       <div className="players">
         <label>
-          Player X Image:
-          <input type="file" accept="image/*" onChange={(e) => handleImageChange('X', e)} />
+          Player X Name:
+          <input
+            type="text"
+            value={playerX}
+            onChange={(e) => handleNameChange('X', e)}
+          />
         </label>
         <label>
-          Player O Image:
-          <input type="file" accept="image/*" onChange={(e) => handleImageChange('O', e)} />
+          Player O Name:
+          <input
+            type="text"
+            value={playerO}
+            onChange={(e) => handleNameChange('O', e)}
+          />
         </label>
       </div>
       <div className="game-board">
